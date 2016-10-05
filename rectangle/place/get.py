@@ -22,12 +22,19 @@ def placer(canv, area, rects):
         if rect['x1'] > area['width'] or rect['x2'] > area['width'] or rect['y1'] > area['height'] or rect['y2'] > area[
             'height']:
             raise CoordinateException
-        canv.create_rectangle(rect['x1'], rect['y1'], rect['x2'], rect['y2'], fill="white", outline="red")
+        canv.create_rectangle(rect['x1'], rect['y1'], rect['x2'], rect['y2'], outline="red")
     return canv
 
 
-def fill(canv, x, y, color="yellow"):
-    canv.create_line(x, y)
+def fill(canv, rects, x, y, color="yellow"):
+    print(y, "<", rects[1]['y1'])
+    if rects[1]['x2'] > rects[0]['x2'] and rects[1]['y2'] > rects[0]['y2']:
+        if y > rects[1]['y2'] and y < rects[1]['y1'] and x < rects[0]['x2'] and x > rects[0]['x1']:
+            x1=rects[0]['x1']
+            x2=rects[0]['y1']
+            y1=rects[1]['x2']
+            y2=rects[1]['y2']
+            canv.create_rectangle(x1, y1, x2, y2, fill=color, outline=color)
     return canv
 
 
@@ -40,21 +47,21 @@ def main():
         print("Error: Something was going wrong while reading the file.")
 
     data = data.split()
-    area = {'width': data[0], 'height': data[1]}
+    area = {'width': int(data[0]), 'height': int(data[1])}
     rects = []
     if not len(data[2:]) % 4:
         number_of_rects = int(len(data[2:]) / 4)
         i = 2
         for rect in range(number_of_rects):
-            rects.append({'x1': data[i], 'y1': data[i + 1], 'x2': data[i + 2], 'y2': data[i + 3]})
+            rects.append({'x1': int(data[i]), 'y1': int(data[i + 1]), 'x2': int(data[i + 2]), 'y2': int(data[i + 3])})
             i += 4
 
     try:
         root = Tk()
-        canv = Canvas(root, width=area['width'], height=area['height'], bg="lightblue",
+        canv = Canvas(root, width=area['width'], height=area['height'], bg="white",
                       cursor="pencil")
         canv = placer(canv, area, rects)
-        canv = fill(canv, 300, 300)
+        canv = fill(canv, rects, 350, 460)
         canv.pack()
         root.mainloop()
     except CoordinateException as e:
