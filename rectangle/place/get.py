@@ -37,7 +37,7 @@ def placer(canv, area, rects):
         canv.create_line(rect['x1'], rect['y2'], rect['x1'], area["height"], fill="white")
         canv.create_line(rect['x2'], rect['y2'], area["width"], rect['y2'], fill="white")
         canv.create_line(rect['x2'], rect['y2'], rect['x2'], area["height"], fill="white")
-    return canv, xx, yy, cross
+    return canv, xx, yy
 
 
 def find_closest_lines(area, xx, yy, cross_points, x, y):
@@ -109,7 +109,7 @@ def main():
         root = Tk()
         canv = Canvas(root, width=area['width'], height=area['height'], bg="white",
                       cursor="pencil")
-        canv, xx, yy, cross = placer(canv, area, rects)
+        canv, xx, yy = placer(canv, area, rects)
         x1, y1, x2, y2 = find_closest_lines(area, xx, yy, cross_points, 201, 201)
         canv.create_rectangle(x1, y1, x2, y2, fill="yellow")
         canv.pack()
