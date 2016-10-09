@@ -20,6 +20,8 @@ def filereader(file_name):
 def placer(canv, area, rects):
     xx = []
     yy = []
+    xlines = []
+    ylines = []
     for rect in rects:
         if rect['x1'] > area['width'] or rect['x2'] > area['width'] or rect['y1'] > area['height'] or rect['y2'] > area[
             'height']:
@@ -28,35 +30,47 @@ def placer(canv, area, rects):
         xx.append(rect['x2'])
         yy.append(rect['y1'])
         yy.append(rect['y2'])
+        xlines.append((rect['x1'], rect['x2']))
+        ylines.append((rect['y1'], rect['y2']))
         canv.create_rectangle(rect['x1'], rect['y1'], rect['x2'], rect['y2'], outline="red")
-        canv.create_line(0, rect['y1'], rect['x1'], rect['y1'], fill="white")
-        canv.create_line(rect['x1'], 0, rect['x1'], rect['y1'], fill="white")
-        canv.create_line(area["width"], rect['y1'], rect['x2'], rect['y1'], fill="white")
-        canv.create_line(rect['x2'], 0, rect['x2'], rect['y1'], fill="white")
-        canv.create_line(rect['x1'], rect['y2'], 0, rect['y2'], fill="white")
-        canv.create_line(rect['x1'], rect['y2'], rect['x1'], area["height"], fill="white")
-        canv.create_line(rect['x2'], rect['y2'], area["width"], rect['y2'], fill="white")
-        canv.create_line(rect['x2'], rect['y2'], rect['x2'], area["height"], fill="white")
-    return canv, xx, yy
+        canv.create_line(0, rect['y1'], rect['x1'], rect['y1'], fill="blue")
+        canv.create_line(rect['x1'], 0, rect['x1'], rect['y1'], fill="blue")
+        canv.create_line(area["width"], rect['y1'], rect['x2'], rect['y1'], fill="blue")
+        canv.create_line(rect['x2'], 0, rect['x2'], rect['y1'], fill="blue")
+        canv.create_line(rect['x1'], rect['y2'], 0, rect['y2'], fill="blue")
+        canv.create_line(rect['x1'], rect['y2'], rect['x1'], area["height"], fill="blue")
+        canv.create_line(rect['x2'], rect['y2'], area["width"], rect['y2'], fill="blue")
+        canv.create_line(rect['x2'], rect['y2'], rect['x2'], area["height"], fill="blue")
+    return canv, xx, yy, xlines, ylines
 
 
-def find_closest_lines(area, xx, yy, x, y):
-    minx = area["width"]
+def find_closest_lines(area, xx, yy, xlines, ylines, x, y):
+    maxx = area["width"]
+    minx = 0
     for i in xx:
-        if i < minx and i > x:
+        if i < maxx and i > x:
+            maxx = i
+        if i > minx and i < x:
             minx = i
-    miny = area["height"]
+
+    for i in xlines:
+        if minx >= i[0] and maxx <= i[1]:
+            print("miny=", minx, "\nmaxy=", maxx)
+            break
+
+    maxy = area["height"]
+    miny = 0
     for i in yy:
-        if i < miny and i > y:
-                miny = i
-    maxx = 0
-    for i in xx:
-        if i > maxx and i < x:
-                maxx = i
-    maxy = 0
-    for i in yy:
-        if i > maxy and i < y:
-                maxy = i
+        if i < maxy and i > y:
+            maxy = i
+        if i > miny and i < y:
+            miny = i
+
+    for i in ylines:
+        if miny >= i[0] and maxy <= i[1]:
+            print("miny=", miny, "\nmaxy=", maxy)
+            break
+
     return minx, miny, maxx, maxy
 
 
@@ -82,8 +96,8 @@ def main():
         root = Tk()
         canv = Canvas(root, width=area['width'], height=area['height'], bg="white",
                       cursor="pencil")
-        canv, xx, yy = placer(canv, area, rects)
-        x1, y1, x2, y2 = find_closest_lines(area, xx, yy, 460, 460)
+        canv, xx, yy, xlines, ylines = placer(canv, area, rects)
+        x1, y1, x2, y2 = find_closest_lines(area, xx, yy, xlines, ylines, 460, 460)
         canv.create_rectangle(x1, y1, x2, y2, fill="yellow")
         # canv = fill(canv, rects, 300, 300)
         canv.pack()
