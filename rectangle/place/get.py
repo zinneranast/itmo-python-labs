@@ -1,20 +1,23 @@
-from tkinter import *
+from Tkinter import *
 
 
 class CoordinateException(Exception):
-    def print(self):
+    def print_(self):
         print("Error: Incorrect coordinates of the rectangle.")
 
 
 def filereader(file_name):
-    try:
+    with open(file_name, "r") as file:
+        data = file.read()
+        return data
+    """try:
         with open(file_name, "r") as file:
             data = file.read()
             return data
     except FileNotFoundError:
         raise FileNotFoundError
     except Exception:
-        raise Exception
+        raise Exception"""
 
 
 def placer(canv, area, rects):
@@ -65,28 +68,92 @@ def find_closest_lines(area, xx, yy, cross_points, x, y):
 
 
 def cross(rect, new_rect):
-    if not (new_rect['x1'] > rect['x2'] and new_rect['y1'] > rect['y2']):
-        return [new_rect['x1'], rect['y2']], [rect['x2'], new_rect['y1']]
-    else:
-        return {}
+    x11 = rect['x1']
+    x21 = rect['x2']
+    y11 = rect['y1']
+    y21 = rect['y2']
+    x12 = new_rect['x1']
+    x22 = new_rect['x2']
+    y12 = new_rect['y1']
+    y22 = new_rect['y2']
+
+    points = []
+    if not (x21 < x12 and x11 > x22 and y21 < y12 and y11 > y22):
+        if x11 > x12 and x21 < x22:
+            if y11 < y12:
+                if y21 < y22:
+                    points.append([x11, y12])
+                    points.append([x21, y12])
+                elif y21 != y22:
+                    points.append([x11, y12])
+                    points.append([x11, y22])
+                    points.append([x12, y12])
+                    points.append([x12, y22])
+            elif y11 != y12:
+                points.append([x11, y22])
+                points.append([x21, y22])
+        elif x11 < x12 and x21 > x22:
+            if y11 < y12:
+                if y21 < y22:
+                    points.append([x12, y21])
+                    points.append([x22, y21])
+                elif y21 != y22:
+                    points.append([x12, y11])
+                    points.append([x12, y22])
+                    points.append([x22, y11])
+                    points.append([x22, y22])
+            elif y11 != y12:
+                points.append([x12, y11])
+                points.append([x22, y11])
+        elif x11 < x12:
+            if y21 < y22:
+                if y11 < y12:
+                    points.append([x12, y21])
+                    points.append([x21, y12])
+                elif y11 != y12:
+                    points.append([x12, y11])
+                    points.append([x12, y21])
+            if y21 > y22:
+                if y11 < y12:
+                    points.append([x12, y11])
+                    points.append([x21, y22])
+                elif y11 != y12:
+                    points.append([x21, y21])
+                    points.append([x21, y22])
+        elif x21 > x22:
+            if y21 < y22:
+                if y11 < y12:
+                    points.append([x11, y12])
+                    points.append([x21, y21])
+                elif y11 != y12:
+                    points.append([x22, y11])
+                    points.append([x22, y21])
+            if y21 > y22:
+                if y11 < y12:
+                    points.append([x11, y12])
+                    points.append([x11, y22])
+                elif y11 != y12:
+                    points.append([x11, y22])
+                    points.append([x22, y11])
+    return points
 
 
 def find_cross(rects, new_rect, cross_points):
     for rect in rects:
         points = cross(rect, new_rect)
         if points:
-            cross_points.append(points[0])
-            cross_points.append(points[1])
+            cross_points += points
     return cross_points
 
 
 def main():
-    try:
+    data = filereader("input.txt")
+    """try:
         data = filereader("input.txt")
     except FileNotFoundError:
         print("Error: File does not exist.")
     except Exception:
-        print("Error: Something was going wrong while reading the file.")
+        print("Error: Something was going wrong while reading the file.")"""
 
     data = data.split()
     area = {'width': int(data[0]), 'height': int(data[1])}
@@ -110,12 +177,12 @@ def main():
         canv = Canvas(root, width=area['width'], height=area['height'], bg="white",
                       cursor="pencil")
         canv, xx, yy = placer(canv, area, rects)
-        x1, y1, x2, y2 = find_closest_lines(area, xx, yy, cross_points, 201, 201)
+        x1, y1, x2, y2 = find_closest_lines(area, xx, yy, cross_points, 200, 200)
         canv.create_rectangle(x1, y1, x2, y2, fill="yellow")
         canv.pack()
         root.mainloop()
     except CoordinateException as e:
-        e.print()
+        e.print_()
 
 
 main()
