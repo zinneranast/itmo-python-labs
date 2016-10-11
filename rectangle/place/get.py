@@ -41,6 +41,21 @@ def placer(canv, area, rects):
 
 
 def find_closest_lines(area, xx, yy, cross_points, x, y):
+    minx = area["width"]
+    maxx = 0
+    for i in xx:
+        if i < minx and i > x:
+            minx = i
+        if i > maxx and i < x:
+            maxx = i
+    miny = area["height"]
+    maxy = 0
+    for i in yy:
+        if i < miny and i > y:
+            miny = i
+        if i > maxy and i < y:
+            maxy = i
+
     maxx = area["width"]
     minx = 0
     for i in xx:
@@ -65,7 +80,15 @@ def find_closest_lines(area, xx, yy, cross_points, x, y):
 
 
 def cross(rect, new_rect):
+    print("compare", rect, new_rect)
+
+
+    if new_rect['x2'] > rect['x1']:
+        
+
+
     if not (new_rect['x1'] > rect['x2'] and new_rect['y1'] > rect['y2']):
+        print("cross", [new_rect['x1'], rect['y2']], [rect['x2'], new_rect['y1']])
         return [new_rect['x1'], rect['y2']], [rect['x2'], new_rect['y1']]
     else:
         return {}
@@ -110,6 +133,8 @@ def main():
         canv = Canvas(root, width=area['width'], height=area['height'], bg="white",
                       cursor="pencil")
         canv, xx, yy = placer(canv, area, rects)
+        for i in cross_points:
+            print(i)
         x1, y1, x2, y2 = find_closest_lines(area, xx, yy, cross_points, 201, 201)
         canv.create_rectangle(x1, y1, x2, y2, fill="yellow")
         canv.pack()
