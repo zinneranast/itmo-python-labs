@@ -77,62 +77,88 @@ def cross(rect, new_rect):
     y12 = new_rect['y1']
     y22 = new_rect['y2']
 
+    print rect, new_rect
+
     points = []
-    if not (x21 < x12 and x11 > x22 and y21 < y12 and y11 > y22):
+    if x21 < x12 or x11 > x22 or y21 < y12 or y11 > y22:
+        print "out"
+    else:
         if x11 > x12 and x21 < x22:
+            print 'x11 > x12 and x21 < x22', x11, x12, x21, x22
             if y11 < y12:
                 if y21 < y22:
+                    print 'y21 < y22', y21, y22
                     points.append([x11, y12])
                     points.append([x21, y12])
                 elif y21 != y22:
+                    print 'y21 > y22', y21, y22
                     points.append([x11, y12])
                     points.append([x11, y22])
                     points.append([x12, y12])
                     points.append([x12, y22])
             elif y11 != y12:
+                print 'y11 < y12', y11, y12
                 points.append([x11, y22])
                 points.append([x21, y22])
         elif x11 < x12 and x21 > x22:
+            print 'x11 < x12 and x21 > x22', x11, x12, x21, x22
             if y11 < y12:
                 if y21 < y22:
+                    print 'y21 < y22', y21, y22
                     points.append([x12, y21])
                     points.append([x22, y21])
                 elif y21 != y22:
+                    print 'y21 > y22', y21, y22
                     points.append([x12, y11])
                     points.append([x12, y22])
                     points.append([x22, y11])
                     points.append([x22, y22])
             elif y11 != y12:
+                print 'y11 < y12', y11, y12
                 points.append([x12, y11])
                 points.append([x22, y11])
         elif x11 < x12:
+            print 'x11 < x12', x11, x12
             if y21 < y22:
+                print 'y21 < y22', y21, y22
                 if y11 < y12:
+                    print 'y11 < y12', y11, y12
                     points.append([x12, y21])
                     points.append([x21, y12])
                 elif y11 != y12:
+                    print 'y11 > y12', y11, y12
                     points.append([x12, y11])
                     points.append([x12, y21])
             if y21 > y22:
+                print 'y21 > y22', y21, y22
                 if y11 < y12:
+                    print 'y11 < y12', y11, y12
                     points.append([x12, y11])
                     points.append([x21, y22])
                 elif y11 != y12:
+                    print 'y11 > y12', y11, y12
                     points.append([x21, y21])
                     points.append([x21, y22])
         elif x21 > x22:
+            print 'x21 > x22', x21, x22
             if y21 < y22:
+                print 'y21 < y22', y21, y22
                 if y11 < y12:
+                    print 'y11 < y12', y11, y12
                     points.append([x11, y12])
                     points.append([x21, y21])
                 elif y11 != y12:
+                    print 'y11 > y12', y11, y12
                     points.append([x22, y11])
                     points.append([x22, y21])
             if y21 > y22:
+                print 'y21 > y22', y21, y22
                 if y11 < y12:
+                    print 'y11 < y12', y11, y12
                     points.append([x11, y12])
                     points.append([x11, y22])
                 elif y11 != y12:
+                    print 'y11 > y12', y11, y12
                     points.append([x11, y22])
                     points.append([x22, y11])
     return points
@@ -141,8 +167,10 @@ def cross(rect, new_rect):
 def find_cross(rects, new_rect, cross_points):
     for rect in rects:
         points = cross(rect, new_rect)
+        print points
         if points:
             cross_points += points
+            print cross_points
     return cross_points
 
 
