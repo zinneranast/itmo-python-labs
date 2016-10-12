@@ -38,12 +38,12 @@ def find_closest_lines(area, xx, yy, cross_points, x, y):
     miny = area["height"]
     maxy = 0
 
-    for i in xx:
+
+    for i in range(len(xx)):
         if i < minx and i > x:
             minx = i
         if i > maxx and i < x:
             maxx = i
-    for i in yy:
         if i < miny and i > y:
             miny = i
         if i > maxy and i < y:
