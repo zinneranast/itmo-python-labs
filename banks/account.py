@@ -1,5 +1,4 @@
-from transaction import Transaction, MonetaryTransaction
-import monetary
+from banks.transaction import Transaction, MonetaryTransaction
 from datetime import datetime
 
 
@@ -30,12 +29,12 @@ class BankAccount:
                                               monetary.Monetary[monetary], exchange_rate)
         self.__transaction_history.append(transaction)
 
-    def withdraw_money(self, bank_id, monetary_id, exchange_rate, amount_of_mooney):
+    def withdraw_money(self, bank_id, monetary, exchange_rate, amount_of_mooney):
         self.amount_of_mooney -= amount_of_mooney
         date_of_payment = datetime.date()
         if monetary == 'RUB':
-            transaction = Transaction(self.__bank_id, bank_id, self.__amount_of_payment, date_of_payment)
+            transaction = Transaction(self.__bank_id, bank_id, amount_of_mooney, date_of_payment)
         else:
-            transaction = MonetaryTransaction(self.__bank_id, bank_id, self.__amount_of_payment, date_of_payment,
+            transaction = MonetaryTransaction(self.__bank_id, bank_id, amount_of_mooney, date_of_payment,
                                               monetary.Monetary[monetary], exchange_rate)
         self.__transaction_history.append(transaction)

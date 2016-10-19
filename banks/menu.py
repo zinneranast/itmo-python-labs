@@ -1,4 +1,4 @@
-from bank import Bank
+from banks.bank import Bank
 import sys, uuid
 
 
@@ -121,21 +121,40 @@ def main():
             else:
                 continue
         elif input == 'c':
-            print('List of accounts - l <bank_id> <client_id>')
+            print('List of clients - l <bank_id>')
             print('Add client - a <bank_id> <client_name>')
             print('Remove client - r <bank_id> <client_id>')
+            print('Get info about client - i <bank_id> <client_id>')
             print('Exit - e')
             input = sys.stdin.readline().strip()
-            if input == 'l':
-                bank_id = uuid.UUID(input.split()[2])
+            if input.startswith('l'):
+                bank_id = uuid.UUID(input.split()[1])
+                clients = banks[bank_id].get_list_of_clients()
+                if clients:
+                    print('Clients:')
+                    for client in clients:
+                        print(client)
+            elif input.startswith('a'):
+                inputs = input.split()
+                bank_id = uuid.UUID(inputs[1])
+                client_name = inputs[2]
+                banks[bank_id].add_client(client_name)
+            elif input.startswith('r'):
+                inputs = input.split()
+                bank_id = uuid.UUID(inputs[1])
+                client_id = uuid.UUID(inputs[2])
+                banks[bank_id].remove_client(client_id)
+            elif input.startswith('i'):
+                bank_id = uuid.UUID(input.split()[1])
                 client_id = uuid.UUID(input.split()[2])
                 accounts = banks[bank_id].get_client_accounts()
                 for account_id, account in accounts.items():
                     print(account_id, account)
                 print('Get total amount of money - t')
                 print(
-                    'Occur bank transfer - o <sending_account_id> <sending_bank_id> <receiving_account_id> <receiving_bank_id> <amount_of_money> <monetary>')
-                print('Get more information about account - i <account_id>')
+                    'Occur bank transfer - o <sending_account_id> <sending_bank_id> <receiving_account_id> <receiving_bank_id> <amount_of_money> <monetary> <exchange_rate>')
+                print('Get amount of money - m <account_id>')
+                print('Get transaction history - h <account_id>')
                 print('Exit - e')
                 input = sys.stdin.readline().strip()
                 if input == 't':
@@ -149,32 +168,32 @@ def main():
                     amount_of_money = inputs[5]
                     try:
                         monetary = input.split()[6]
+                        exchange_rate = input.split()[7]
                     except:
                         monetary = 'RUB'
-                    banks[bank_id].get_client(client_id).occur_bank_ransfer(sending_account_id, sending_bank_id,
-                                                                            receiving_account_id, receiving_bank_id,
-                                                                            amount_of_money, monetary='RUB',
-                                                                            exchange_rate='')
-                elif input.startswith('i'):
+                        exchange_rate = ''
+                    banks[sending_bank_id].occur_bank_ransfer(sending_account_id, receiving_account_id,
+                                                              amount_of_money, receiving_bank_id=receiving_bank_id,
+                                                              monetary=monetary,
+                                                              exchange_rate=exchange_rate)
+                    banks[receiving_bank_id].occur_bank_ransfer(sending_account_id, receiving_account_id,
+                                                                amount_of_money, sending_bank_id=sending_bank_id,
+                                                                monetary=monetary,
+                                                                exchange_rate=exchange_rate)
+                elif input.startswith('m'):
                     account_id = uuid.UUID(input.split()[1])
                     print('Amount of money:', accounts[account_id].get_amount_of_mooney())
-                    print('Transaction history:')
-                    for transaction in accounts[account_id].get_transaction_history():
-                        print(transaction)
+                elif input.startswith('h'):
+                    account_id = uuid.UUID(input.split()[1])
+                    transactions = accounts[account_id].get_transaction_history()
+                    if transactions:
+                        print('Transaction history:')
+                        for transaction in transactions:
+                            print(transaction)
                 elif input == 'e':
                     exit()
                 else:
                     continue
-            elif input.startswith('a'):
-                inputs = input.split()
-                bank_id = uuid.UUID(inputs[1])
-                client_name = inputs[2]
-                banks[bank_id].add_client(client_name)
-            elif input.startswith('r'):
-                inputs = input.split()
-                bank_id = uuid.UUID(inputs[1])
-                client_id = uuid.UUID(inputs[2])
-                banks[bank_id].remove_client(client_id)
             elif input == 'e':
                 exit()
             else:
