@@ -10,13 +10,13 @@ def main():
     print('Total amount of money - mb')
     print('Add client - c <client_name>')
     print('Open account - a <client_id> <amount_of_mooney> (default - 0)')
+    print('Set decision - d <transaction_id> <decision> (true or false)')
     print("\nClients:")
     print('Get total amount of money - t <client_id>')
     print(
         'Occur bank transfer - o <sending_account_id> <receiving_account_id> <amount_of_money> <monetary> (default - "RUB") <exchange_rate>')
     print('Get amount of money - mc <account_id>')
     print('Get transaction history - h <account_id>')
-    print('Set decision - d <transaction_id> <decision> (true or false)')
     print('Exit - e')
 
     while (1):
