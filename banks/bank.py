@@ -14,6 +14,9 @@ class Bank:
     def get_accounts(self):
         return self.__accounts.values()
 
+    def get_client(self, client_id):
+        return self.__clients[client_id]
+
     def get_clients(self):
         return self.__clients.values()
 
@@ -26,15 +29,14 @@ class Bank:
     def get_amount_of_mooney_by_client_id(self, client_id):
         amount_of_mooney = 0
         for account in self.__accounts.values():
-            client_id_ = account.get_client_id()
-            if client_id_ == client_id:
+            if account.get_client_id() == client_id:
                 amount_of_mooney += account.get_amount_of_mooney()
 
         return amount_of_mooney
 
     def get_transaction_history_by_account_id(self, account_id):
         transactions = []
-        for transaction in self.__transactions:
+        for transaction in self.__transactions.values():
             if transaction.get_sending_account_id() == account_id or transaction.get_receiving_account_id() == account_id:
                 transactions.append(transaction)
 
@@ -56,11 +58,12 @@ class Bank:
                            exchange_rate=''):
 
         if monetary != 'RUB':
+            print("i'm here")
             transaction = MonetaryTransaction(uuid.uuid4(),
                                               sending_account_id,
                                               receiving_account_id,
                                               amount_of_payment,
-                                              datetime.date(),
+                                              datetime.now(),
                                               monetary,
                                               exchange_rate)
         else:
@@ -68,7 +71,7 @@ class Bank:
                                       sending_account_id,
                                       receiving_account_id,
                                       amount_of_payment,
-                                      datetime.date())
+                                      datetime.now())
 
             self.__accounts[sending_account_id].withdraw_money(amount_of_payment)
             self.__accounts[receiving_account_id].deposit_mooney(amount_of_payment)
@@ -76,7 +79,7 @@ class Bank:
         self.__transactions[transaction.get_transaction_id()] = transaction
 
     def bank_decision(self, transaction_id, decision):
-        if decision == True:
+        if decision:
             transaction = self.__transactions[transaction_id]
 
             sending_account_id = transaction.get_sending_account_id()
