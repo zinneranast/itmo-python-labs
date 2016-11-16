@@ -14,6 +14,8 @@ def main():
     for device in data:
         try:
             device = Device(device[0], device[1], device[2], device[3], device[4])
+            print('Device in csv format: \n' + device.csv + '\n')
+            print('Device in xml format: \n' + device.xml + '\n')
             device.print_info()
         except InvalidDeviceTypeException as e:
             e.print_message()

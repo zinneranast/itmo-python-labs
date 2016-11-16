@@ -1,7 +1,11 @@
 from devices.decorators import *
+from devices.descriptors import *
 
 
-class Device:
+class Device(object):
+    csv = CsvDescriptor(['__uid__', '__d_type__', '__d_version__', '__manufacturer__'])
+    xml = XmlDescriptor()
+
     def __init__(self, uid, d_type, d_version, manufacturer, production_date):
         self.__uid__ = uid
         self.set_device_type(d_type)

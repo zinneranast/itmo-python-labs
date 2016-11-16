@@ -1,6 +1,3 @@
-from banks.account import BankAccount
-
-
 class Client:
     def __init__(self, client_id, client_name):
         self.__client_id = client_id
