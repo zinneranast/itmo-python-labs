@@ -4,7 +4,7 @@ import csv
 
 
 def csv_file_reader(file_path):
-    with open(file_path, encoding="utf8") as csvfile:
+    with open(file_path) as csvfile:
         reader = csv.reader(csvfile, delimiter=',', quotechar='|')
         return [row for row in reader]
 
