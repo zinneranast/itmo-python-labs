@@ -1,4 +1,5 @@
 from devices.decorators import *
+import datetime
 
 
 class Device:
@@ -11,7 +12,7 @@ class Device:
 
     @device_type
     def set_device_type(self, type):
-        self.__d_type__ = type
+        self.d_type = type
 
     @device_version
     def set_device_version(self, version):
@@ -19,9 +20,9 @@ class Device:
 
     @manufacturer_name
     def set_manufacturer(self, manufacturer):
-        self.__manufacturer__ = manufacturer
+        self.manufacturer = manufacturer
 
-    @date_format
+    @date_format(datetime.date(1990, 1, 1), datetime.date.today())
     def set_date(self, date):
         self.__production_date__ = date
 
@@ -32,7 +33,7 @@ class Device:
               'Manufacturer: %s\n'
               'Production Date: %s\n'
               % (self.__uid__,
-                 self.__d_type__,
+                 self.d_type,
                  self.__d_version__,
-                 self.__manufacturer__,
+                 self.manufacturer,
                  self.__production_date__))

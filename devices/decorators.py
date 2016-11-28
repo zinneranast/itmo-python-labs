@@ -1,4 +1,5 @@
 from devices.exceptions import *
+from functools import wraps
 import datetime
 import re
 
@@ -38,20 +39,24 @@ def manufacturer_name(set_manufacturer):
     return wrapper
 
 
-def date_format(set_date):
+def date_format(min, max):
     def parse_date(date):
         try:
             date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
-            if date < datetime.date(1990, 1, 1) or date > datetime.date.today():
+            if date < min or date > max:
                 return False
         except:
             return False
         return True
 
-    def wrapper(self, date):
-        if parse_date(date):
-            return set_date(self, date)
-        else:
-            raise InvalidDateException
+    def decorator(set_date):
+        @wraps(set_date)
+        def wrapper(date):
+            if parse_date(date):
+                return set_date(date)
+            else:
+                raise InvalidDateException
 
-    return wrapper
+        return wrapper
+
+    return decorator
