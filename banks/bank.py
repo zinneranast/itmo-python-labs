@@ -51,6 +51,7 @@ class Bank:
         self.__accounts[account.get_account_id()] = account
         return account.get_account_id()
 
+
     def occur_bank_ransfer(self, sending_account_id,
                            receiving_account_id,
                            amount_of_payment,

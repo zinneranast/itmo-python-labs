@@ -3,40 +3,45 @@ from functools import wraps
 import datetime
 import re
 
-device_types = {
-    'desktop': 'Desktop device description',
-    'tablet': 'Tablet device description',
-    'mobile': 'Mobile device description',
-    'tv': 'TV device description'
-}
+
+def device_type(device_types):
+    def decorator(set_device_type):
+        @wraps(set_device_type)
+        def wrapper(self, type):
+            if type in device_types:
+                return set_device_type(self, type)
+            else:
+                raise InvalidDeviceTypeException
+
+        return wrapper
+
+    return decorator
 
 
-def device_type(set_device_type):
-    def wrapper(self, type):
-        if type in device_types:
-            return set_device_type(self, type)
-        else:
-            raise InvalidDeviceTypeException
+def device_version(regex):
+    def decorator(set_device_version):
+        @wraps(set_device_version)
+        def wrapper(self, version):
+            if not re.match(regex, version):
+                raise InvalidDeviceVersionException
+            return set_device_version(self, version)
 
-    return wrapper
+        return wrapper
 
-
-def device_version(set_device_version):
-    def wrapper(self, version):
-        if not re.match('[a-zA-Z]*[\-\.]*[0-9]+', version):
-            raise InvalidDeviceVersionException
-        return set_device_version(self, version)
-
-    return wrapper
+    return decorator
 
 
-def manufacturer_name(set_manufacturer):
-    def wrapper(self, manufacturer):
-        if len(manufacturer) < 1 or len(manufacturer) > 30:
-            raise InvalidManufacturerException
-        return set_manufacturer(self, manufacturer)
+def manufacturer_name(max):
+    def decorator(set_manufacturer):
+        @wraps(set_manufacturer)
+        def wrapper(self, manufacturer):
+            if len(manufacturer) < 1 or len(manufacturer) > max:
+                raise InvalidManufacturerException
+            return set_manufacturer(self, manufacturer)
 
-    return wrapper
+        return wrapper
+
+    return decorator
 
 
 def date_format(min, max):
@@ -51,9 +56,9 @@ def date_format(min, max):
 
     def decorator(set_date):
         @wraps(set_date)
-        def wrapper(date):
+        def wrapper(self, date):
             if parse_date(date):
-                return set_date(date)
+                return set_date(self, date)
             else:
                 raise InvalidDateException
 
