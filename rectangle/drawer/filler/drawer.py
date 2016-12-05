@@ -1,4 +1,4 @@
-from tkinter import *
+from Tkinter import *
 
 
 class CoordinateException(Exception):
@@ -48,7 +48,7 @@ def fill1(canv, area, rects, x, y):
     return canv
 
 
-def fill(canv, area, rects, x, y):
+def fill2(canv, area, rects, x, y):
     for rect in rects:
         if x > rect['x1'] and x < rect['x2'] and y > rect['y1'] and y < rect['y2']:
             return fill1(canv, area, rects, x, y)
@@ -62,3 +62,14 @@ def fill(canv, area, rects, x, y):
         canv.create_line(rect['x1'], rect['y2'], rect['x2'], rect['y2'])
         canv.create_line(rect['x1'], rect['y1'], rect['x2'], rect['y1'])
     return canv
+
+
+def fill(canv, area, rects, x, y):
+    xy = {'x': [area["width"], 0], 'y': [area["height"], 0]}
+    for rect in rects:
+        xy['x'] += [rect['x1'], rect['x2']]
+        xy['y'] += [rect['y1'], rect['y2']]
+
+    #canv.create_rectangle(minx, miny, maxx, maxy, fill="yellow")
+    return canv
+
