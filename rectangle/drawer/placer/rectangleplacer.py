@@ -5,11 +5,11 @@ import uuid
 
 def place():
     try:
-        data = read("input.txt")
+        data = read('input.txt')
     except FileNotFoundError:
-        print("Error: File does not exist.")
+        print('Error: File does not exist.')
     except Exception:
-        print("Error: Something was going wrong while reading the file.")
+        print('Error: Something was going wrong while reading the file.')
 
     data = data.split()
     area = {'width': int(data[0]), 'height': int(data[1])}
