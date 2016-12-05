@@ -20,36 +20,36 @@ def get_exam_mark(data):
 
 # get list of unique students
 def get_unique_students(data):
-    try:
-        unique_students = get_students(list(data)[0])
-        map(lambda k:
-            list(map(lambda student:
-                     unique_students.append(student) if not student in unique_students else student,
-                     get_students(k))),
-            list(data)[1:])
-        return unique_students
-    except:
-        return None
+    unique_students = []
+
+    for line in data:
+        for student in line[1]:
+            if not student[0] in unique_students:
+                unique_students.append(student[0])
+
+    # map(lambda k:
+    #    list(map(lambda student:
+    #             unique_students.append(student) if not student in unique_students else student,
+    #             get_students(k))),
+    #    list(data)[1:])
+
+    return unique_students
 
 
 # check if student has a mark on the subject or not
 def check_if_student_in_list(data):
-    try:
-        return tuple(list(data)[0])[1]
-    except:
-        return 0
+    return tuple(list(data)[0])[1]
 
 
 # get list of students and their sum of marks
 def get_results(data):
-    if not get_unique_students(data) is None:
-        return list(map(lambda student:
-                        (student, sum(list(map(
-                            lambda subject:
-                            check_if_student_in_list(filter(lambda x:
-                                                            tuple(x)[0] == student, tuple(subject)[1])),
-                            list(data))))),
-                        get_unique_students(data)))
+    return list(map(lambda student:
+                    (student, sum(list(map(
+                        lambda subject:
+                        check_if_student_in_list(filter(lambda x:
+                                                        tuple(x)[0] == student, tuple(subject)[1])),
+                        list(data))))),
+                    get_unique_students(data)))
 
 
 # get result list of pairs 'student - mark'
@@ -62,10 +62,7 @@ def get_final_marks(data):
                     get_results(data)))
 
 
-def main(input_data):
-    return get_final_marks(input_data)
-
-
-print(main([('Мат. Анализ', [('Иванов', 15), ('Петров', 13), ('Сидоров', 2), ('Васильев', 10), ('Жуков', 6)]),
-            ('Алгебра', [('Петров', 24), ('Иванов', 20), ('Васильев', 11), ('Жуков', 12)]),
-            ('Логика', [('Иванов', 10), ('Петров', 15), ('Сидоров', 6), ('Жуков', 15)])]))
+print(
+    get_final_marks([('Мат. Анализ', [('Иванов', 15), ('Петров', 13), ('Сидоров', 2), ('Васильев', 10), ('Жуков', 6)]),
+                     ('Алгебра', [('Петров', 24), ('Иванов', 20), ('Васильев', 11), ('Жуков', 12), ('Смирнов', 10)]),
+                     ('Логика', [('Иванов', 10), ('Петров', 15), ('Сидоров', 6), ('Жуков', 15)])]))
