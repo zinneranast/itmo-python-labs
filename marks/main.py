@@ -21,24 +21,20 @@ def get_exam_mark(data):
 # get list of unique students
 def get_unique_students(data):
     unique_students = []
-
-    for line in data:
-        for student in line[1]:
-            if not student[0] in unique_students:
-                unique_students.append(student[0])
-
-    # map(lambda k:
-    #    list(map(lambda student:
-    #             unique_students.append(student) if not student in unique_students else student,
-    #             get_students(k))),
-    #    list(data)[1:])
-
+    list(map(lambda line:
+                   list(map(lambda student:
+                            unique_students.append(student[0]) if not student[0] in unique_students else [],
+                          line[1])),
+                   data))
     return unique_students
 
 
 # check if student has a mark on the subject or not
 def check_if_student_in_list(data):
-    return tuple(list(data)[0])[1]
+    if len(data) > 0:
+        return tuple(data[0])[1]
+    else:
+        return 0
 
 
 # get list of students and their sum of marks
@@ -46,8 +42,9 @@ def get_results(data):
     return list(map(lambda student:
                     (student, sum(list(map(
                         lambda subject:
-                        check_if_student_in_list(filter(lambda x:
-                                                        tuple(x)[0] == student, tuple(subject)[1])),
+                        check_if_student_in_list(list(filter(lambda x:
+                                                             tuple(x)[0] == student,
+                                                             tuple(subject)[1]))),
                         list(data))))),
                     get_unique_students(data)))
 
@@ -65,4 +62,4 @@ def get_final_marks(data):
 print(
     get_final_marks([('Мат. Анализ', [('Иванов', 15), ('Петров', 13), ('Сидоров', 2), ('Васильев', 10), ('Жуков', 6)]),
                      ('Алгебра', [('Петров', 24), ('Иванов', 20), ('Васильев', 11), ('Жуков', 12), ('Смирнов', 10)]),
-                     ('Логика', [('Иванов', 10), ('Петров', 15), ('Сидоров', 6), ('Жуков', 15)])]))
+                     ('Логика', [('Иванов', 10), ('Петров', 15), ('Васков', 45), ('Сидоров', 6), ('Жуков', 15)])]))

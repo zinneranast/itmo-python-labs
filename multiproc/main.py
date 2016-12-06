@@ -29,7 +29,7 @@ def parse_line(line):
     return f1(a, b)
 
 
-def get_result(after_f1, i):
+def after_f2(after_f1, i):
     if i % 2 == 0:
         after_f1[i + 2] = f2(f2(after_f1[i], after_f1[i + 1]), after_f1[i + 2])
     return after_f1
@@ -37,10 +37,9 @@ def get_result(after_f1, i):
 
 def main():
     data = file_reader('input.txt')
-
     pool = ThreadPool()
     after_f1 = pool.map(lambda line: parse_line(line), data)
-    pool.map(lambda i: get_result(after_f1, i), range(len(after_f1) - 2))
+    pool.map(lambda i: after_f2(after_f1, i), range(len(after_f1) - 2))
     pool.close()
     pool.join()
 
