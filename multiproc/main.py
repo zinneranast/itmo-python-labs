@@ -11,7 +11,7 @@ def file_reader(file_path):
 def file_writer(file_path):
     with open(file_path, 'w') as txtfile:
         for i in range(2000000):
-            print(random.randint(1, 100), random.randint(1, 100), file=txtfile)
+            txtfile.write(str(random.randint(1, 100)) + " " + str(random.randint(1, 100)) + "\n")
 
 
 def f1(a, b):
@@ -29,17 +29,21 @@ def parse_line(line):
     return f1(a, b)
 
 
-def after_f2(after_f1, i):
-    if i % 2 == 0:
-        after_f1[i + 2] = f2(f2(after_f1[i], after_f1[i + 1]), after_f1[i + 2])
-    return after_f1
-
-
 def main():
+    #file_writer('input.txt')
     data = file_reader('input.txt')
     pool = ThreadPool()
     after_f1 = pool.map(lambda line: parse_line(line), data)
-    pool.map(lambda i: after_f2(after_f1, i), range(len(after_f1) - 2))
+
+    def after_f2(array):
+        temp = pool.map(lambda i: f2(array[i], array[i - 1]), range(1, len(array), 2))
+        if len(array) % 2 != 0:
+            temp += array[-1:]
+        return temp
+
+    while len(after_f1) > 1:
+        after_f1 = after_f2(after_f1)
+
     pool.close()
     pool.join()
 
