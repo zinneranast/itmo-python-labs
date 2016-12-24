@@ -1,0 +1,6 @@
+.idea/
+blog.db
+blog.egg-info/
+build/
+dist/
+__pycache__/
